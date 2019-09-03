@@ -1,0 +1,10 @@
+.red-color {
+    color: #cc0000;
+}
+
+.icon-padding {
+	padding: 0px 5px;
+}
+.datatable-list td, .datatable-list th { 
+	text-align: center; 
+}

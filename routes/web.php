@@ -14,10 +14,14 @@
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/layout', function () {
-    return view('datatable');
-});
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::group(['middleware' => [], 'prefix' => 'admin/', 'as' => 'admin.', 'namespace' => 'Admin'], function () {
+    Route::get('/videos/list', 'VideoController@list')->name('videos.list');
+    Route::resources([
+	    'videos' => 'VideoController'
+	]);	
+});
