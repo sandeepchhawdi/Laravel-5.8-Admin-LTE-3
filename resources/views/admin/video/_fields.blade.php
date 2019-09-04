@@ -16,6 +16,8 @@
 </div>
 <!-- /.box-body -->
 <div class="box-footer">
-    <a href="{{ route('admin.videos.index') }}" class="btn btn-default">Cancel</a>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <a href="{{ route('admin.videos.index') }}" class="btn btn-default">Back</a>
+    @canany(['create', 'update'], App\Video::class)
+    <button type="submit" class="btn btn-primary">Save</button>
+    @endcanany
 </div>

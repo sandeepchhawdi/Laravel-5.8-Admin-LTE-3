@@ -20,6 +20,14 @@ class UsersTableSeeder extends Seeder
         
         $admin->assignRole('admin');
         
+        $admin = User::create([
+            'name' => 'Moderator',
+            'email' => 'moderator@gmail.com',
+            'password' => Hash::make('moderator'),
+        ]);
+        
+        $admin->assignRole('moderator');
+        
         $user = User::create([
             'name' => 'User',
             'email' => 'user@gmail.com',

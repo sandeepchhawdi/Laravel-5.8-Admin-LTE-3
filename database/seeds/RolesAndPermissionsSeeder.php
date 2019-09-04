@@ -12,19 +12,33 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        Permission::create(['name' => 'modify video']);
-        Permission::create(['name' => 'list video']);
-        Permission::create(['name' => 'view video']);
-
-        // create roles and assign created permissions
-
-        // this can be done as separate statements
-        Role::create(['name' => 'admin'])->givePermissionTo(['list video', 'view video', 'modify video']);
+        Permission::create(['name' => 'create videos']);
+        Permission::create(['name' => 'update videos']);
+        Permission::create(['name' => 'view videos']);
+        Permission::create(['name' => 'delete videos']);
         
-        // or may be done by chaining
-        Role::create(['name' => 'user'])->givePermissionTo(['list video', 'view video']);
-
-        $role = Role::create(['name' => 'super-admin']);
+        Permission::create(['name' => 'create users']);
+        Permission::create(['name' => 'update users']);
+        Permission::create(['name' => 'view users']);
+        Permission::create(['name' => 'delete users']);
+        
+        $role = Role::create(['name' => 'admin']);
         $role->givePermissionTo(Permission::all());
+        
+        Role::create(['name' => 'moderator'])
+                ->givePermissionTo([
+                    'view videos',
+                    'create videos',
+                    'update videos',
+                    'view users',
+                    'create users',
+                    'update users'
+                ]);
+
+        Role::create(['name' => 'user'])
+                ->givePermissionTo([
+                    'view videos',
+                    'view users'
+                ]);
     }
 }

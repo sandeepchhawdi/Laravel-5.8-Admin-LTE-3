@@ -2,12 +2,12 @@
 @section('content-header')
 <div class="row mb-2">
   <div class="col-sm-6">
-    <h1 class="m-0 text-dark">Videos List</h1>
+    <h1 class="m-0 text-dark">Users List</h1>
   </div><!-- /.col -->
   <div class="col-sm-6">
     <ol class="breadcrumb float-sm-right">
-      @can('create', App\Video::class)
-      <li class="breadcrumb-item"><a href="{{ route('admin.videos.create') }}" class="btn btn-primary">Add Video</a></li>
+      @can('create', App\User::class)
+      <li class="breadcrumb-item"><a href="{{ route('admin.users.create') }}" class="btn btn-primary">Add User</a></li>
       @endcan
     </ol>
   </div><!-- /.col -->
@@ -22,7 +22,7 @@
             </div> -->
             <!-- /.card-header -->
             <div class="card-body">
-                <table id="videos" class="table table-bordered table-striped datatable-list">
+                <table id="users" class="table table-bordered table-striped datatable-list">
                     <thead>
                         <tr>
                             <th>Title</th>
@@ -42,7 +42,7 @@
     <!-- /.col -->
 </div>
 <!-- /.row --> 
-@can('delete', App\Video::class)
+@can('delete', App\User::class)
 @include('admin.common._delete_item')
 @endcan
 @endsection
@@ -50,13 +50,13 @@
 <script>
     var datatable_var;
     $(function () {
-        datatable_var = $('#videos').DataTable({
+        datatable_var = $('#users').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('admin.videos.list') }}",
+            ajax: "{{ route('admin.users.list') }}",
             "columns": [
-                { "data": "title" },
-                { "data": "published" },
+                { "data": "name" },
+                { "data": "email" },
                 { "data": "created_at" },
                 { "data": "id", orderable: false, searchable: false }
             ]

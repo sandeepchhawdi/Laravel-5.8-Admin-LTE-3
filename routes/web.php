@@ -11,17 +11,15 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-
-Route::group(['middleware' => [], 'prefix' => 'admin/', 'as' => 'admin.', 'namespace' => 'Admin'], function () {
-    Route::get('/videos/list', 'VideoController@list')->name('videos.list');
+Route::get('/', 'Admin\VideoController@index')->name('root');
+Route::group(['middleware' => ['auth', 'web'], 'prefix' => 'admin/', 'as' => 'admin.', 'namespace' => 'Admin'], function () {
+    Route::get('/videos/list', 'VideoController@data')->name('videos.list');
+    Route::get('/users/list', 'UserController@data')->name('users.list');
     Route::resources([
-	    'videos' => 'VideoController'
-	]);	
+        'videos' => 'VideoController',
+        'users' => 'UserController'
+    ]);
 });
