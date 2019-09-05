@@ -10,6 +10,9 @@
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- DataTables -->
   <link rel="stylesheet" href="{{ asset('css/admin/dataTables.bootstrap4.css') }}">
+  <!-- Select2 -->
+  <link rel="stylesheet" href="{{ asset('css/admin/select2.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/admin/select2-bootstrap4.min.css') }}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('css/admin/adminlte.min.css') }}">
   <!-- Daterange picker -->

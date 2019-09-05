@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\User;
 use App\Http\Requests\Admin\UserCreateRequest;
+use App\Http\Requests\Admin\UserUpdateRequest;
 use Datatables;
+use Hash;
+use App\Role;
 
 class UserController extends AdminController
 {
@@ -44,7 +47,13 @@ class UserController extends AdminController
     public function create()
     {
         $this->authorize('create', User::class);
-        return view('admin.user.create');
+        $roles = [];
+        $all_roles = Role::all()->pluck('name');
+        foreach ($all_roles as $role) {
+            $roles[$role] = ucfirst($role);
+        }
+        $assigned_roles = [];
+        return view('admin.user.create', compact('roles', 'assigned_roles'));
     }
     
     public function show($id)
@@ -58,7 +67,13 @@ class UserController extends AdminController
     {
         $this->authorize('update', User::class);
         $user = User::find($id);
-        return view('admin.user.edit', compact('user'));
+        $assigned_roles = $user->getRoleNames()->toArray();
+        $roles = [];
+        $all_roles = Role::all()->pluck('name');
+        foreach ($all_roles as $role) {
+            $roles[$role] = ucfirst($role);
+        }
+        return view('admin.user.edit', compact('user', 'roles', 'assigned_roles'));
     }
     
     public function store(UserCreateRequest $request)
@@ -66,8 +81,12 @@ class UserController extends AdminController
         $this->authorize('create', User::class);
         try {
             $data = $request->all();
-            unset($data['_token']);
-            User::create($data);
+            $user = new User();
+            $user->name = $data['name'];
+            $user->email = $data['email'];
+            $user->password = Hash::make($data['password']);
+            $user->save();
+            $user->syncRoles($data['roles']);
             toast('User created successfully!', 'success');
         } catch (\Exception $ex) {
             toast('Some error occurred!', 'error');
@@ -76,18 +95,19 @@ class UserController extends AdminController
         return redirect()->route('admin.users.index');
     }
     
-    public function update($id, UserCreateRequest $request)
+    public function update($id, UserUpdateRequest $request)
     {
         $this->authorize('update', User::class);
         try {
             $data = $request->all();
-            unset($data['_method']);
-            unset($data['_token']);
-            $user = User::where('id', $id)->first();
-            foreach ($data as $key => $value) {
-                $user->$key = $value;
+            $user = User::find($id);
+            $user->name = $data['name'];
+            $user->email = $data['email'];
+            if(!empty($data['password']) && $id == auth()->user()->id) {
+                $user->password = Hash::make($data['password']);
             }
-            $user->update();
+            $user->save();
+            $user->syncRoles($data['roles']);
             toast('User updated successfully!', 'success');
         } catch (\Exception $ex) {
             toast('Some error occurred!', 'error');
